@@ -1,0 +1,20 @@
+<launch>
+  <!-- Bringup TurtleBot3 -->
+  <include file="$(find turtlebot3_bringup)/launch/turtlebot3_robot.launch"/>
+
+  <!-- Start getting images from the camera -->
+  <node type="raspicam_node" pkg="raspicam_node" name="raspicam_node" output="screen">
+    <param name="width" value="640"/>
+    <param name="height" value="480"/>
+
+    <param name="framerate" value="10"/>
+    <param name="exposure_mode" value="antishake"/>
+    <param name="shutter_speed" value="0"/>
+  </node>
+
+  <!-- Decompress the received images from the camera -->
+  <node pkg="image_transport" type="republish" name="camera_decompress" args="compressed in:=/raspicam_node/image raw out:=/camera/bgr/image_raw" output="screen"/>
+
+  <!-- Start the RL worker -->
+  <node name="agent" pkg="object_tracker_robot" type="run_turtlebot_controller.sh" output="screen"/>
+</launch>
