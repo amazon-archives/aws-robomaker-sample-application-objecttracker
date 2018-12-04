@@ -195,7 +195,7 @@ colcon bundle
 #### Running the model on the TurtleBot
 
 Once the bundle has been created, it can be deployed using RoboMaker. For information about deploying using RoboMaker,
-see [this documentation](http://battalio.aka.corp.amazon.com/robomaker/gs-deploy.html).
+see [this documentation](https://docs.aws.amazon.com/robomaker/latest/dg/gs-deploy.html).
 
 You must also complete the Raspberry Pi camera setup for the TurtleBot WafflePi, outlined
 [here](http://emanual.robotis.com/docs/en/platform/turtlebot3/appendix_raspi_cam/#raspberry-pi-camera).
@@ -249,9 +249,9 @@ colcon bundle
 
 This produces the artifacts `robot_ws/build/output.tar.gz` and `simulation_ws/build/output.tar.gz` respectively. 
 You'll need to upload these to an s3 bucket, then you can use these files to
-[create a robot application](http://battalio.aka.corp.amazon.com/robomaker/create-robot-application.html),
-[create a simulation application](http://battalio.aka.corp.amazon.com/robomaker/create-simulation-application.html),
-and [create a simulation job](http://battalio.aka.corp.amazon.com/robomaker/create-simulation-job.html) in RoboMaker.
+[create a robot application](https://docs.aws.amazon.com/robomaker/latest/dg/create-robot-application.html),
+[create a simulation application](https://docs.aws.amazon.com/robomaker/latest/dg/create-simulation-application.html),
+and [create a simulation job](https://docs.aws.amazon.com/robomaker/latest/dg/create-simulation-job.html) in RoboMaker.
 
 ## License
 
