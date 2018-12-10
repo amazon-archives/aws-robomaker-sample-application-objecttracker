@@ -14,11 +14,7 @@ def load_config(config_path):
 
     required_items = (
         'bucket_name',
-        'bucket_prefix',
-        'model_file',
-        'aws_access_key_id',
-        'aws_secret_access_key',
-        'aws_session_token',
+        'model_key',
         'region_name'
     )
 
@@ -28,17 +24,11 @@ def load_config(config_path):
     return context
 
 def download_model_from_s3(context, dest_path):
-    s3_bucket = context['bucket_name']
-    s3_key = context['bucket_prefix'] + '/' + context['model_file']
-
     s3 = boto3.resource('s3',
-        region_name=context['region_name'],
-        aws_access_key_id=context['aws_access_key_id'],
-        aws_secret_access_key=context['aws_secret_access_key'],
-        aws_session_token=context['aws_session_token'])
+        region_name=context['region_name'])
     s3.meta.client.download_file(
         Bucket=context['bucket_name'],
-        Key=context['bucket_prefix'] + '/' + context['model_file'],
+        Key=context['model_key'],
         Filename=dest_path)
 
 def main(argv):
@@ -52,7 +42,7 @@ def main(argv):
 
     download_model_from_s3(context, dest_path)
 
-    print 'Successfully downloaded model'
+    print 'Successfully downloaded model to ', dest_path
 
 if __name__ == '__main__':
     main(sys.argv)

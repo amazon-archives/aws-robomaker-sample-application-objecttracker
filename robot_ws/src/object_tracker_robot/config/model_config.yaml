@@ -1,7 +1,3 @@
 bucket_name: <YOUR_BUCKET_NAME_HERE>
-bucket_prefix: <YOUR_BUCKET_PREFIX_HERE>
-model_file: model.pb
+model_key: <YOUR_FILE_PATH_HERE>
 region_name: <YOUR_BUCKET_REGION_HERE>
-aws_access_key_id: <YOUR_AWS_ACCESS_KEY_HERE>
-aws_secret_access_key: <YOUR_AWS_SECRET_ACCESS_KEY_HERE>
-aws_session_token: <YOUR_AWS_SESSION_TOKEN_HERE>

@@ -23,90 +23,35 @@ You will need to create an AWS Account and configure the credentials to be able 
 
 ### AWS Permissions
 
-You can find instructions for creating a new IAM Policy [here](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_create.html#access_policies_create-start). In the JSON tab paste the following policy document:
+To train the reinforcement learning model in simulation, you need an IAM role with the following policy. You can find instructions for creating a new IAM Policy
+[here](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_create.html#access_policies_create-start). In the JSON tab paste the following policy document:
 
 ```
 {
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      Action: 's3:ListBucket',
-      Effect: 'Allow',
-      Resource: [
-        Fn.Join('', [ 'arn:aws:s3:::', Fn.Ref(Resources.BundlesBucket) ])
-      ]
-    },
-    {
-      Action: [
-        's3:Get*',
-        's3:List*'
-      ],
-      Effect: 'Allow',
-      Resource: [
-        Fn.Join('', [ 'arn:aws:s3:::', Fn.Ref(Resources.BundlesBucket), '/*' ])
-      ]
-    },
-    {
-      Action: 's3:Put*',
-      Effect: 'Allow',
-      Resource: [
-        Fn.Join('', [ 'arn:aws:s3:::', Fn.Ref(Resources.BundlesBucket), '/*' ])
-      ]
-    },
-    {
-      Action: [
-        'logs:CreateLogGroup',
-        'logs:CreateLogStream',
-        'logs:PutLogEvents',
-        'logs:DescribeLogStreams'
-      ],
-      Effect: 'Allow',
-      Resource: [
-        Fn.Join(':', [ 'arn:aws:logs', Refs.Region, Refs.AccountId, `log-group:${cwGroupPrefix}*` ])
-      ]
-    },
-    {
-      Action: [
-        'ec2:CreateNetworkInterfacePermission'
-      ],
-      Effect: 'Allow',
-      Resource: [
-        Fn.Join(':', [ 'arn:aws:ec2', Refs.Region, Refs.AccountId, '*' ])
-      ]
-    },
-    {
-      Action: [
-        'ec2:AssociateRouteTable',
-        'ec2:CreateSubnet',
-        'ec2:DeleteNetworkInterface',
-        'ec2:DeleteSubnet',
-        'ec2:DescribeNetworkInterfaces',
-        'ec2:DescribeSecurityGroups',
-        'ec2:DescribeSubnets',
-        'ec2:DescribeVpcs'
-      ],
-      Effect: 'Allow',
-      Resource: '*' // These ec2 commands do not support resource-level permissions
-    },
-    {
-      Action: [
-        'cloudwatch:PutMetricData'
-      ],
-      Effect: 'Allow',
-      Resource: '*' // This command does not support resource-level permissions
-    },
-    {
-      Action: [
-        's3:DeleteObject'
-      ],
-      Effect: 'Allow',
-      Resource: [ Fn.Join('', [ Fn.GetAtt(Resources.BundlesBucket, 'Arn'), '/', '*' ]) ]
-    }
-  ]
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "cloudwatch:PutMetricData",
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+                "logs:DescribeLogStreams",
+                "s3:Get*",
+                "s3:List*",
+                "s3:Put*",
+                "s3:DeleteObject"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+        }
+    ]
 }
 ```
 
-## Usage
+## Usage (without RoboMaker)
+
+If you plan on using this application with AWS RoboMaker, you can find more detailed instructions in the "Usage with RoboMaker" section.
 
 ### Training the model
 
@@ -122,16 +67,15 @@ colcon bundle
 
 #### Running the simulation
 
-- MARKOV_PRESET_FILE - Defines the hyperparameters of the reinforcement learning algorithm. This should be set to `object_tracker.py`.
-- MODEL_S3_BUCKET - The name of the S3 bucket in which you want to store the trained model.
-- MODEL_S3_PREFIX - The path where you want to store the model.
-- ROS_AWS_REGION - The region of the S3 bucket in which you want to store the model.
+The following environment variables must be set when you run your simulation:
 
-If you are running the simulation outside of RoboMaker, you will also need the following environment variables, which gives the simulation permissions to S3.
-
-- AWS_ACCESS_KEY_ID
-- AWS_SECRET_ACCESS_KEY
-- AWS_SESSION_TOKEN
+- `MARKOV_PRESET_FILE` - Defines the hyperparameters of the reinforcement learning algorithm. This should be set to `object_tracker.py`.
+- `MODEL_S3_BUCKET` - The name of the S3 bucket in which you want to store the trained model.
+- `MODEL_S3_PREFIX` - The path where you want to store the model.
+- `ROS_AWS_REGION` - The region of the S3 bucket in which you want to store the model.
+- `AWS_ACCESS_KEY_ID` - The access key for the role you created in the "AWS Permissions" section
+- `AWS_SECRET_ACCESS_KEY` - The secret access key for the role you created in the "AWS Permissions" section
+- `AWS_SESSION_TOKEN` - The session token for the role you created in the "AWS Permissions" section
 
 Once the environment variables are set, you can run local training using the roslaunch command
 
@@ -139,16 +83,6 @@ Once the environment variables are set, you can run local training using the ros
 source simulation_ws/install/setup.sh
 roslaunch object_tracker_simulation local_training.launch
 ```
-
-#### Seeing your robot learn
-
-As the reinforcement learning model improves, the reward function will increase. You can see the graph of this reward function at
-
-All -> AWSRoboMakerSimulation -> Metrics with no dimensions -> Metric Name -> ObjectTrackerRewardPerEpisode
-
-You can think of this metric as an indicator into how well your model has been trained. If the graph has plateaus, then your robot has finished learning.
-
-![object-tracker-metrics.png](docs/images/object-tracker-metrics.png)
 
 ### Evaluating the model
 
@@ -168,44 +102,50 @@ roslaunch object_tracker_robot evaluation.launch
 
 ### Deploying the model
 
-
 #### Building the robot bundle
 
+*IMPORTANT*
+You must build the bundle for the same architecture that you plan on running the application on. The easiest way to do this is either by building on
+the TurtleBot itself or using a cross-build solution, like the one provided with AWS RoboMaker.
+
+
 Before you build the robot workspace, you must edit the file `robot_ws/src/object_tracker_robot/config/model_config.yaml` to include the location
-of your trained model, as well as the temporary AWS IAM credentials it needs to pull the model. For more information on how to get your AWS
-credentials, see [this page](https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html).
+of your trained model.
 
 Create a file `/etc/ros/rosdep/custom-rules/object-tracker-rules.yaml` and add the following configuration to it.
-```
+```bash
 libjpeg62:
   ubuntu:
     xenial: [libjpeg62]
 ```
 
+Then add the rule to rosdep using the following commands:
 ```bash
-echo "yaml file:/etc/ros/rosdep/custom-rules/object-tracker-rules.yaml" > /etc/ros/rosdep/sources.list.d/23-object-tracker-rules.list
+sudo bash -c 'echo "yaml file:/etc/ros/rosdep/custom-rules/object-tracker-rules.yaml" > /etc/ros/rosdep/sources.list.d/23-object-tracker-rules.list'
 sudo apt-get update
-cd robot_ws
 rosdep update
+```
+
+Finally, build your application. If your model is not in a private bucket, the build step requires AWS credentials for the bucket you wish
+to use. One way to do this is by setting the AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables. For more information on how to get
+your AWS credentials, see [this page](https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html).
+```bash
+cd robot_ws
 rosdep install --from-paths src --ignore-src -r -y
 colcon build
-colcon bundle
 ```
+
+If you are not running on the same computer you are using to build, you must also bundle your application using `colcon bundle`.
 
 #### Running the model on the TurtleBot
 
-Once the bundle has been created, it can be deployed using RoboMaker. For information about deploying using RoboMaker,
-see [this documentation](https://docs.aws.amazon.com/robomaker/latest/dg/gs-deploy.html).
+If you did not build on the robot, you must now copy the bundle to the robot you wish to run on, either by using RoboMaker's deployment features or by
+copying using `scp` or `rsync`.
 
 You must also complete the Raspberry Pi camera setup for the TurtleBot WafflePi, outlined
 [here](http://emanual.robotis.com/docs/en/platform/turtlebot3/appendix_raspi_cam/#raspberry-pi-camera).
 
-You must run the following command before running the Robot Application on the robot.
-```bash
-sudo chmod 777 /dev/video0
-```
-
-You may also upload and run the bundle manually. Once the bundle has been manually uploaded to the target TurtleBot WafflePi, ssh into the TurtleBot and run
+Once the bundle has been uploaded to the target TurtleBot WafflePi, ssh into the TurtleBot and run
 
 ```bash
 export BUNDLE_CURRENT_PREFIX=<bundle location>
@@ -217,7 +157,119 @@ Your TurtleBot WafflePi should now be track and move towards any other TurtleBot
 your simulated environment as closely as possible. You can try tweaking your simulated environment by adding randomization, lighting, textures, or even to
 have the TurtleBot try to track a different object.
 
-### Troubleshooting
+
+## Usage with RoboMaker
+
+### Adding a trust policy to your role
+
+If you are using RoboMaker to train the model, you need to add the following trust policy to the role you created in the "AWS Permissions" section. Instructions on how to
+modify a role can be found [here](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_manage_modify.html#roles-managingrole-editing-console).
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "robomaker.amazonaws.com"
+            },
+            "Action": "sts:AssumeRole"
+        }
+    ]
+}
+```
+
+### Building and running the simulation application
+
+You can build and bundle the simulation application the same way you would locally. This produces the artifact `simulation_ws/build/output.tar.gz`. 
+You'll need to upload these to an s3 bucket, then you can use these files to
+[create a robot application](https://docs.aws.amazon.com/robomaker/latest/dg/create-robot-application.html),
+[create a simulation application](https://docs.aws.amazon.com/robomaker/latest/dg/create-simulation-application.html),
+and [create a simulation job](https://docs.aws.amazon.com/robomaker/latest/dg/create-simulation-job.html) in RoboMaker.
+
+When you create the simulation job in RoboMaker, you must assign a public IP to the simulation, give the simulation subnets and a
+security group, and set the following environment variables in your simulation application:
+
+- `MARKOV_PRESET_FILE` - Defines the hyperparameters of the reinforcement learning algorithm. This should be set to `object_tracker.py`.
+- `MODEL_S3_BUCKET` - The name of the S3 bucket in which you want to store the trained model.
+- `MODEL_S3_PREFIX` - The path where you want to store the model.
+- `ROS_AWS_REGION` - The region of the S3 bucket in which you want to store the model.
+
+Finally, the launch command for the simulation application is as follows:
+
+```bash
+source simulation_ws/install/setup.sh
+roslaunch object_tracker_simulation local_training.launch
+```
+
+### Evaluating the model
+
+To evaluate your model in RoboMaker, clone the job you used to train and change the launch command of the simulation application to the following:
+
+```bash
+roslaunch object_tracker_robot evaluation.launch
+```
+
+### Building the robot bundle
+
+Once the model is trained, you can build a bundle to deploy to the robot. If you are using the RoboMaker Development Environment, you can use the
+following commands to create a Docker container that performs cross-builds:
+```bash
+cd /opt/robomaker/cross-compilation-dockerfile
+sudo bin/build_image.bash
+cd ~/environment/ObjectTracker/robot_ws
+docker run -v $(pwd):/robot_ws -v ~/.aws:/root/.aws -it ros-cross-compile:armhf
+cd robot_ws
+```
+
+Before you build the robot workspace, you must edit the file `robot_ws/src/object_tracker_robot/config/model_config.yaml` to include the location
+of your trained model.
+
+Create a file `/etc/ros/rosdep/custom-rules/object-tracker-rules.yaml` and add the following configuration to it.
+```bash
+libjpeg62:
+  ubuntu:
+    xenial: [libjpeg62]
+```
+
+Then add the rule to rosdep using the following commands:
+```bash
+echo "yaml file:/etc/ros/rosdep/custom-rules/object-tracker-rules.yaml" > /etc/ros/rosdep/sources.list.d/23-object-tracker-rules.list
+apt-get update
+rosdep update
+```
+
+Finally, build and bundle your application.
+```bash
+cd /robot_ws
+rosdep install --from-paths src --ignore-src -r -y
+colcon build
+colcon bundle
+```
+
+### Deploying the bundle to a robot
+
+Once the application is bundled, you can create a robot application and deploy the bundle to your robot. For more information,
+see [this page](https://docs.aws.amazon.com/robomaker/latest/dg/gs-deploy.html).
+
+You must run the following command before deploying the Robot Application to the robot.
+```bash
+sudo chmod 777 /dev/video0
+```
+
+## Seeing your robot learn
+
+As the reinforcement learning model improves, the reward function will increase. You can see the graph of this reward function at
+
+All -> AWSRoboMakerSimulation -> Metrics with no dimensions -> Metric Name -> ObjectTrackerRewardPerEpisode
+
+You can think of this metric as an indicator into how well your model has been trained. If the graph has plateaus, then your robot has finished learning.
+
+![object-tracker-metrics.png](docs/images/object-tracker-metrics.png)
+
+
+## Troubleshooting
 
 ###### The robot does not look like it is training
 
@@ -225,33 +277,6 @@ The training algorithm has two phases. The first is when the reinforcement learn
 its target, while the second is when the algorithm uses the information gained in the first phase to update the model. In the second
 phase, no new commands are sent to the TurtleBot, meaning it will appear as if it is stopped, spinning in circles, or drifting off
 aimlessly.
-
-## Using this sample with RoboMaker
-
-You first need to install colcon. Python 3.5 or above is required. 
-
-```bash
-pip3 install colcon-ros-bundle
-```
-
-After colcon is installed you need to build your robot or simulation, then you can bundle with:
-
-```bash
-# Bundling Robot Application
-cd robot_ws
-source install/local_setup.sh
-colcon bundle
-
-# Bundling Simulation Application
-cd simulation_ws
-colcon bundle
-```
-
-This produces the artifacts `robot_ws/build/output.tar.gz` and `simulation_ws/build/output.tar.gz` respectively. 
-You'll need to upload these to an s3 bucket, then you can use these files to
-[create a robot application](https://docs.aws.amazon.com/robomaker/latest/dg/create-robot-application.html),
-[create a simulation application](https://docs.aws.amazon.com/robomaker/latest/dg/create-simulation-application.html),
-and [create a simulation job](https://docs.aws.amazon.com/robomaker/latest/dg/create-simulation-job.html) in RoboMaker.
 
 ## License
 
