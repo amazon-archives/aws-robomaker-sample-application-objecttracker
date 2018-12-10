@@ -17,7 +17,7 @@
       }
     }, {
       "id": "ObjectTracker_Training",
-      "name": "ObjectTracker Train Model",
+      "name": "1. ObjectTracker Train Model",
       "type": "simulation",
       "cfg": {
         "simulationApp": {
@@ -56,13 +56,13 @@
           "vpcConfig": {
             "assignPublicIp": true,
             "securityGroups": [ "<security group id>" ],
-            "subnets": [ "<subnet id>" ]
+            "subnets": [ "<subnet id 1>", "<subnet id 2>" ]
           }
         }
       }
     }, {
       "id": "ObjectTracker_Evaluation",
-      "name": "ObjectTracker Evaluate Model",
+      "name": "2. ObjectTracker Evaluate Model",
       "type": "simulation",
       "cfg": {
         "simulationApp": {
@@ -101,14 +101,14 @@
           "vpcConfig": {
             "assignPublicIp": true,
             "securityGroups": [ "<security group id>" ],
-            "subnets": [ "<subnet id>" ]
+            "subnets": [ "<subnet id 1>", "<subnet id 2>" ]
           }
         }
       }
     }, {
       "id": "ObjectTracker_wf1",
       "type": "workflow",
-      "name": "ObjectTracker - Build and Bundle All",
+      "name": "ObjectTracker - Build and Bundle Simulation",
       "runCfgIds": ["ObjectTracker_Cfg01", "ObjectTracker_Cfg02"]
     }
   ]
