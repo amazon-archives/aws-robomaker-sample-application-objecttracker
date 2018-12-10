@@ -208,7 +208,6 @@ roslaunch object_tracker_simulation local_training.launch
 To evaluate your model in RoboMaker, clone the job you used to train and change the launch command of the simulation application to the following:
 
 ```bash
-source simulation_ws/install/setup.sh
 roslaunch object_tracker_robot evaluation.launch
 ```
 
