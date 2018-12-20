@@ -7,5 +7,5 @@
 
     <include file="$(find object_tracker_simulation)/launch/create_world.launch" />
 
-    <node name="agent" pkg="object_tracker_simulation" type="run_local_rl_agent.sh" output="screen"/>
+    <node name="agent" pkg="object_tracker_simulation" type="run_local_rl_agent.sh" output="screen" required="true"/>
 </launch>

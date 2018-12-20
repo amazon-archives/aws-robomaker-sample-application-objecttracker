@@ -97,7 +97,7 @@ evaluation using the roslaunch command
 
 ```bash
 source simulation_ws/install/setup.sh
-roslaunch object_tracker_robot evaluation.launch
+roslaunch object_tracker_simulation evaluation.launch
 ```
 
 ### Deploying the model
