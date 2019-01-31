@@ -112,16 +112,19 @@ the TurtleBot itself or using a cross-build solution, like the one provided with
 Before you build the robot workspace, you must edit the file `robot_ws/src/object_tracker_robot/config/model_config.yaml` to include the location
 of your trained model.
 
-Create a file `/etc/ros/rosdep/custom-rules/object-tracker-rules.yaml` and add the following configuration to it.
+Next, you need to add custom rosdep rules required by the application. The first rule is hosted by RoboMaker, and can be added by running `echo "yaml https://s3-us-west-2.amazonaws.com/rosdep/python.yaml" > /etc/ros/rosdep/sources.list.d/18-python-boto3-pip.list`
+
+The next rule you can create yourself. Create a file `/etc/ros/rosdep/custom-rules/object-tracker-rules.yaml` and add the following configuration to it.
 ```bash
 libjpeg62:
   ubuntu:
     xenial: [libjpeg62]
 ```
 
-Then add the rule to rosdep using the following commands:
+Then add the rule to rosdep by running `echo "yaml file:/etc/ros/rosdep/custom-rules/object-tracker-rules.yaml" > /etc/ros/rosdep/sources.list.d/23-object-tracker-rules.list`
+
+Update rosdep once your new rules are added:
 ```bash
-sudo bash -c 'echo "yaml file:/etc/ros/rosdep/custom-rules/object-tracker-rules.yaml" > /etc/ros/rosdep/sources.list.d/23-object-tracker-rules.list'
 sudo apt-get update
 rosdep update
 ```
