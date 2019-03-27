@@ -62,7 +62,7 @@ cd simulation_ws
 rosws update
 rosdep install --from-paths src --ignore-src -r -y
 colcon build
-colcon bundle
+colcon bundle --bundle-version 1
 ```
 
 #### Running the simulation
@@ -138,7 +138,7 @@ rosdep install --from-paths src --ignore-src -r -y
 colcon build
 ```
 
-If you are not running on the same computer you are using to build, you must also bundle your application using `colcon bundle`.
+If you are not running on the same computer you are using to build, you must also bundle your application using `colcon bundle --bundle-version 1`.
 
 #### Running the model on the TurtleBot
 
@@ -248,7 +248,7 @@ Finally, build and bundle your application.
 cd /robot_ws
 rosdep install --from-paths src --ignore-src -r -y
 colcon build
-colcon bundle
+colcon bundle --bundle-version 1
 ```
 
 ### Deploying the bundle to a robot
