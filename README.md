@@ -62,7 +62,7 @@ cd simulation_ws
 rosws update
 rosdep install --from-paths src --ignore-src -r -y
 colcon build
-colcon bundle --bundle-version 1
+colcon bundle
 ```
 
 #### Running the simulation
@@ -248,7 +248,7 @@ Finally, build and bundle your application.
 cd /robot_ws
 rosdep install --from-paths src --ignore-src -r -y
 colcon build
-colcon bundle --bundle-version 1
+colcon bundle
 ```
 
 ### Deploying the bundle to a robot
