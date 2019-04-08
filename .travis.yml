@@ -27,7 +27,7 @@ before_install:
   -in github_deploy.pem.enc -out github_deploy.pem -d
 - pip install --user awscli
 install:
-- git clone --branch ws-builds https://github.com/aws-robotics/travis-scripts.git
+- git clone https://github.com/aws-robotics/travis-scripts.git
   .ros_ci
 script:
 - ". .ros_ci/add_tag.sh"
