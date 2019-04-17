@@ -23,7 +23,7 @@
         "simulationApp": {
           "name": "RoboMakerObjectTrackerSimulation",
           "s3Bucket": "<bucket name for your simulation bundle>",
-          "sourceBundleFile": "./ObjectTracker/simulation_ws/bundle/output.tar.gz",
+          "sourceBundleFile": "./ObjectTracker/simulation_ws/bundle/output.tar",
           "architecture": "X86_64",
           "launchConfig": {
             "packageName": "object_tracker_simulation",
@@ -68,7 +68,7 @@
         "simulationApp": {
           "name": "RoboMakerObjectTrackerSimulation",
           "s3Bucket": "<bucket name for your simulation bundle>",
-          "sourceBundleFile": "./ObjectTracker/simulation_ws/bundle/output.tar.gz",
+          "sourceBundleFile": "./ObjectTracker/simulation_ws/bundle/output.tar",
           "architecture": "X86_64",
           "launchConfig": {
             "packageName": "object_tracker_simulation",

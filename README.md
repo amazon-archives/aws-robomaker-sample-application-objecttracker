@@ -62,7 +62,7 @@ cd simulation_ws
 rosws update
 rosdep install --from-paths src --ignore-src -r -y
 colcon build
-colcon bundle --bundle-version 1
+colcon bundle
 ```
 
 #### Running the simulation
@@ -185,7 +185,7 @@ modify a role can be found [here](https://docs.aws.amazon.com/IAM/latest/UserGui
 
 ### Building and running the simulation application
 
-You can build and bundle the simulation application the same way you would locally. This produces the artifact `simulation_ws/build/output.tar.gz`. 
+You can build and bundle the simulation application the same way you would locally. This produces the artifact `simulation_ws/build/output.tar`. 
 You'll need to upload these to an s3 bucket, then you can use these files to
 [create a robot application](https://docs.aws.amazon.com/robomaker/latest/dg/create-robot-application.html),
 [create a simulation application](https://docs.aws.amazon.com/robomaker/latest/dg/create-simulation-application.html),
@@ -248,7 +248,7 @@ Finally, build and bundle your application.
 cd /robot_ws
 rosdep install --from-paths src --ignore-src -r -y
 colcon build
-colcon bundle --bundle-version 1
+colcon bundle
 ```
 
 ### Deploying the bundle to a robot
