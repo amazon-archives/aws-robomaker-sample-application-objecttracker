@@ -153,7 +153,7 @@ Once the bundle has been uploaded to the target TurtleBot WafflePi, ssh into the
 ```bash
 export BUNDLE_CURRENT_PREFIX=<bundle location>
 source $BUNDLE_CURRENT_PREFIX/setup.sh
-roslaunch object_tracker_robot/main.launch
+roslaunch object_tracker_robot main.launch
 ```
 
 Your TurtleBot WafflePi should now be track and move towards any other TurtleBot you put in front of it! For the best results, your real-life environment should match
