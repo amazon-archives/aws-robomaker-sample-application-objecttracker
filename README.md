@@ -10,7 +10,7 @@ Keywords: Reinforcement learning, AWS, RoboMaker
 
 ## Requirements
 
-- ROS Kinetic (optional) - To run the simulation locally. Other distributions of ROS may work, however they have not been tested
+- ROS Kinetic / Melodic (optional) - To run the simulation locally. Other distributions of ROS may work, however they have not been tested
 - Gazebo (optional) - To run the simulation locally
 - TurtleBot WafflePi (optional) - To run the trained reinforcement learning model in the real world
 - An AWS S3 bucket - To store the trained reinforcement learning model
