@@ -49,14 +49,14 @@ def generate_launch_description():
     object_tracker_simulation_dir = get_package_share_directory('turtlebot3_simulation_description')
     object_tracker_simulation_launch = launch.actions.IncludeLaunchDescription(
             launch.launch_description_sources.PythonLaunchDescriptionSource(
-                object_tracker_simulation_dir + '/launch/turtlebot3_waffle_pi_and_burger.launch.py'))
+                os.path.join(object_tracker_simulation_dir, 'launch', 'turtlebot3_waffle_pi_and_burger.launch.py')))
 
     ###################################
     ##  Reinforcement Learning Node  ##
     ###################################
     rl_agent = launch_ros.actions.Node(
              package='object_tracker_simulation', node_executable='run_local_rl_agent.sh', output='screen',
-             node_name='rl_agent', name='training', 
+             node_name='rl_agent', name='training',
             )
 
     ########################
