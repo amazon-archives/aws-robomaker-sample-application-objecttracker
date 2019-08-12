@@ -9,6 +9,7 @@
   <author email="ros-contributions@amazon.com">AWS RoboMaker</author>
   <maintainer email="ros-contributions@amazon.com">AWS RoboMaker</maintainer>
 
+  <buildtool_depend>ament_package</buildtool_depend>
   <depend>rclpy</depend>
   <depend>gazebo_ros</depend>
   <depend>gazebo_plugins</depend>
