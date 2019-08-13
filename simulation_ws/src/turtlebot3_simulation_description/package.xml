@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>turtlebot3_simulation_description</name>
+  <version>0.0.1</version>
+  <description>
+    A copy of the TurtleBot3 models.
+  </description>
+  <license>Apache 2.0</license>
+  <author email="aws-robomaker@amazon.com">AWS RoboMaker</author>
+  <maintainer email="aws-robomaker@amazon.com">AWS RoboMaker</maintainer>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <depend>rclcpp</depend>
+  <depend>gazebo_ros_pkgs</depend>
+  <depend>turtlebot3</depend>
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
