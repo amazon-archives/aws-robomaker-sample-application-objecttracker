@@ -15,18 +15,14 @@
 
 import os
 import sys
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))  # noqa
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'launch'))  # noqa
 
 import launch
-
-from launch_ros import get_default_launch_description
 import launch_ros.actions
 
 from ament_index_python.packages import get_package_share_directory
 
-import lifecycle_msgs.msg
-
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))  # noqa
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'launch'))  # noqa
 
 def generate_launch_description():
 
@@ -37,19 +33,18 @@ def generate_launch_description():
     ###########################
     ##  Create World Launch  ##
     ###########################
-    object_tracker_simulation_dir = get_package_share_directory('turtlebot3_simulation_description')
+    object_tracker_simulation_dir = get_package_share_directory('turtlebot3_description_reduced_mesh')
     object_tracker_simulation_launch = launch.actions.IncludeLaunchDescription(
-            launch.launch_description_sources.PythonLaunchDescriptionSource(
-                os.path.join(object_tracker_simulation_dir, 'launch', 'turtlebot3_waffle_pi_and_burger.launch.py')))
+        launch.launch_description_sources.PythonLaunchDescriptionSource(
+            os.path.join(object_tracker_simulation_dir, 'launch', 'turtlebot3_waffle_pi_and_burger.launch.py')))
 
     ###################################
     ##  Reinforcement Learning Node  ##
     ###################################
     rl_agent = launch_ros.actions.Node(
-             package='object_tracker_simulation', node_executable='run_rollout_rl_agent.sh', output='screen',
-             node_name='rl_agent',
-             name='distributed_training',
-            )
+        package='object_tracker_simulation', node_executable='run_rollout_rl_agent.sh', output='screen',
+        node_name='rl_agent',
+        name='distributed_training')
 
     ########################
     ##  Launch Evalution  ##

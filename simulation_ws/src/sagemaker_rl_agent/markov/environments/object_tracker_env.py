@@ -14,12 +14,12 @@ import random
 import math
 import sys
 
-import rospy
+import rclpy
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Image as sensor_image
-from gazebo_msgs.srv import SetModelState
-from gazebo_msgs.msg import ModelState
+from gazebo_msgs.srv import SetEntityState
+from gazebo_msgs.msg import EntityState
 
 TRAINING_IMAGE_SIZE = (160, 120)
 
@@ -63,14 +63,16 @@ class TurtleBot3ObjectTrackerAndFollowerEnv(gym.Env):
                                             shape=(screen_height, screen_width, 3), dtype=np.uint8)
 
         #ROS initialization
-        self.ack_publisher = rospy.Publisher('/cmd_vel', Twist, queue_size=100)
-        self.gazebo_model_state_service = rospy.ServiceProxy('/gazebo/set_model_state', SetModelState)
-        rospy.init_node('rl_coach', anonymous=True)
+        rclpy.init()
+        self.node = rclpy.create_node('rl_coach')
+
+        self.ack_publisher = self.node.create_publisher(Twist, '/cmd_vel', 10)
+        self.gazebo_model_state_service = self.node.create_client(SetEntityState, '/set_entity_state')
 
         #Subscribe to ROS topics and register callbacks
-        rospy.Subscriber('/odom', Odometry, self.callback_position)
-        rospy.Subscriber('/camera/rgb/image_raw', sensor_image, self.callback_image)
-        self.aws_region = rospy.get_param('ROS_AWS_REGION')
+        self.node.create_subscription(Odometry, '/odom', self.callback_position, 10)
+        self.node.create_subscription(sensor_image, '/camera/image_raw', self.callback_image, 10)
+        self.aws_region = os.environ.get("ROS_AWS_REGION", "us-east-1")
 
         self.reward_in_episode = 0
         self.steps = 0
@@ -89,56 +91,57 @@ class TurtleBot3ObjectTrackerAndFollowerEnv(gym.Env):
         self.prev_progress = 0
         self.reward_in_episode = 0
 
-        self.send_action(0, 0) # set the throttle to 0
+        self.send_action(0.0, 0.0) # set the throttle to 0
         self.turtlebot3_reset()
 
         self.infer_reward_state()
         return self.next_state
 
     def turtlebot3_reset(self):
-        rospy.wait_for_service('gazebo/set_model_state')
+        while not self.gazebo_model_state_service.wait_for_service(timeout_sec=1.0):
+            print('service not available, waiting again...')
 
-        self.x = 0
-        self.y = 0
+        self.x = 0.0
+        self.y = 0.0
 
         # Put the turtlebot waffle at (0, 0)
-        modelState = ModelState()
-        modelState.pose.position.z = 0
-        modelState.pose.orientation.x = 0
-        modelState.pose.orientation.y = 0
-        modelState.pose.orientation.z = 0
-        modelState.pose.orientation.w = 0
-        modelState.twist.linear.x = 0
-        modelState.twist.linear.y = 0
-        modelState.twist.linear.z = 0
-        modelState.twist.angular.x = 0
-        modelState.twist.angular.y = 0
-        modelState.twist.angular.z = 0
-        modelState.model_name = 'turtlebot3'
-        modelState.pose.position.x = self.x
-        modelState.pose.position.y = self.y
-        self.gazebo_model_state_service(modelState)
+        entityState = SetEntityState.Request()
+        entityState.state.pose.position.z = 0.0
+        entityState.state.pose.orientation.x = 0.0
+        entityState.state.pose.orientation.y = 0.0
+        entityState.state.pose.orientation.z = 0.0
+        entityState.state.pose.orientation.w = 0.0
+        entityState.state.twist.linear.x = 0.0
+        entityState.state.twist.linear.y = 0.0
+        entityState.state.twist.linear.z = 0.0
+        entityState.state.twist.angular.x = 0.0
+        entityState.state.twist.angular.y = 0.0
+        entityState.state.twist.angular.z = 0.0
+        entityState.state.name = 'turtlebot3_waffle_pi'
+        entityState.state.pose.position.x = self.x
+        entityState.state.pose.position.y = self.y
+        self.gazebo_model_state_service.call_async(entityState)
 
         self.burger_x = 3.5
         self.burger_y = random.uniform(-1, 1)
 
         # Put the turtlebot burger at (2, 0)
-        modelState = ModelState()
-        modelState.pose.position.z = 0
-        modelState.pose.orientation.x = 0
-        modelState.pose.orientation.y = 0
-        modelState.pose.orientation.z = 0
-        modelState.pose.orientation.w = random.uniform(0, 3)
-        modelState.twist.linear.x = 0
-        modelState.twist.linear.y = 0
-        modelState.twist.linear.z = 0
-        modelState.twist.angular.x = 0
-        modelState.twist.angular.y = 0
-        modelState.twist.angular.z = 0
-        modelState.model_name = 'turtlebot3_burger'
-        modelState.pose.position.x = self.burger_x
-        modelState.pose.position.y = self.burger_y
-        self.gazebo_model_state_service(modelState)
+        entityState = SetEntityState.Request()
+        entityState.state.pose.position.z = 0.0
+        entityState.state.pose.orientation.x = 0.0
+        entityState.state.pose.orientation.y = 0.0
+        entityState.state.pose.orientation.z = 0.0
+        entityState.state.pose.orientation.w = random.uniform(0, 3)
+        entityState.state.twist.linear.x = 0.0
+        entityState.state.twist.linear.y = 0.0
+        entityState.state.twist.linear.z = 0.0
+        entityState.state.twist.angular.x = 0.0
+        entityState.state.twist.angular.y = 0.0
+        entityState.state.twist.angular.z = 0.0
+        entityState.state.name = 'turtlebot3_burger'
+        entityState.state.pose.position.x = self.burger_x
+        entityState.state.pose.position.y = self.burger_y
+        self.gazebo_model_state_service.call_async(entityState)
 
         self.last_distance_of_turtlebot = sys.maxsize
 
@@ -176,13 +179,14 @@ class TurtleBot3ObjectTrackerAndFollowerEnv(gym.Env):
     def infer_reward_state(self):
         #Wait till we have a image from the camera
         while not self.image:
-            time.sleep(SLEEP_WAITING_FOR_IMAGE_TIME_IN_SECOND)
-
-        image = Image.frombytes('RGB', (self.image.width, self.image.height),
-                                self.image.data,'raw', 'BGR', 0, 1)
+            rclpy.spin_once(self.node)
+        rclpy.spin_once(self.node)
+        image_data = np.array(self.image.data)
+        image = Image.frombuffer('RGB', (self.image.width, self.image.height),
+                                image_data,'raw', 'BGR', 0, 1)
         image = image.resize(TRAINING_IMAGE_SIZE)
         state = np.array(image)
-
+        rclpy.spin_once(self.node)
         x = self.x
         y = self.y
 

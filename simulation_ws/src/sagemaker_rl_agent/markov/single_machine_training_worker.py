@@ -99,7 +99,7 @@ def main():
 
     # TODO: support other frameworks
     task_parameters = TaskParameters(framework_type=Frameworks.tensorflow,
-                                     checkpoint_save_secs=args.checkpoint_save_secs)
+                                     checkpoint_save_secs=args.checkpoint_save_secs,use_cpu=True)
     task_parameters.__dict__['checkpoint_save_dir'] = args.local_model_directory
     task_parameters.__dict__ = add_items_to_dict(task_parameters.__dict__, args.__dict__)
 
