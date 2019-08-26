@@ -66,7 +66,7 @@ class TurtleBot3ObjectTrackerAndFollowerEnv(gym.Env):
         rclpy.init()
         self.node = rclpy.create_node('rl_coach')
 
-        self.ack_publisher = self.node.create_publisher(Twist, '/cmd_vel', 10)
+        self.ack_publisher = self.node.create_publisher(Twist, '/cmd_vel', 100)
         self.gazebo_model_state_service = self.node.create_client(SetEntityState, '/set_entity_state')
 
         #Subscribe to ROS topics and register callbacks
