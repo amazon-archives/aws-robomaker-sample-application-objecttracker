@@ -1,12 +1,4 @@
 # Amazon ROS2 Object Tracker Simulation package dependencies
 - git: {local-name: src/deps/turtlebot3_simulations, uri: "https://github.com/ROBOTIS-GIT/turtlebot3_simulations", version: ros2}
 - git: {local-name: src/deps/turtlebot3, uri: 'https://github.com/ROBOTIS-GIT/turtlebot3.git', version: ros2}
-- git: {local-name: src/deps/turtlebot3_msgs, uri: 'https://github.com/ROBOTIS-GIT/turtlebot3_msgs.git', version: ros2}
 - git: {local-name: src/deps/cartographer/cartographer_ros, uri: 'https://github.com/ROBOTIS-GIT/cartographer_ros.git', version: dashing}
-- git: {local-name: src/deps/DynamixelSDK, uri: 'https://github.com/ROBOTIS-GIT/DynamixelSDK.git', version: ros2}
-- git: {local-name: src/deps/hls_lfcd_lds_driver, uri: 'https://github.com/ROBOTIS-GIT/hls_lfcd_lds_driver.git', version: ros2}
-# Gazebo packages
-- git: {local-name: src/deps/gazebo/gazebo_ros_pkgs, uri: 'https://github.com/ros-simulation/gazebo_ros_pkgs.git', version: ros2}
-- git: {local-name: src/deps/gazebo/camera_info_manager, uri: 'https://github.com/ros-perception/image_common.git', version: ros2}
-- git: {local-name: src/deps/gazebo/vision_opencv, uri: 'https://github.com/ros-perception/vision_opencv.git', version: ros2}
-
