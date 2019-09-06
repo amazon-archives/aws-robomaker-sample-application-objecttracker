@@ -1,15 +1,14 @@
 ################################################################################
 # Set minimum required version of cmake, project name and compile options
 ################################################################################
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5)
 project(object_tracker_robot)
 
 ################################################################################
-# Find catkin packages and libraries for catkin and system dependencies
+# Find ament_cmake packages and libraries for ament_cmake and system dependencies
 ################################################################################
-find_package(
-  catkin REQUIRED COMPONENTS
-)
+find_package(ament_cmake REQUIRED)
+find_package(rclpy REQUIRED)
 
 ################################################################################
 # Declare ROS messages, services and actions
@@ -20,38 +19,30 @@ find_package(
 ################################################################################
 
 ################################################################################
-# Declare catkin specific configuration to be passed to dependent projects
-################################################################################
-catkin_package(
-  CATKIN_DEPENDS
-)
-
-################################################################################
 # Build
 ################################################################################
 include_directories(
-  ${catkin_INCLUDE_DIRS}
+  ${rclpy_INCLUDE_DIRS}
 )
 
 ################################################################################
 # Install
 ################################################################################
-add_custom_target(
-  download_model ALL
-  COMMAND python
-  ${CMAKE_CURRENT_SOURCE_DIR}/scripts/download_model.py
-  ${CMAKE_CURRENT_SOURCE_DIR}/config/model_config.yaml
-  ${CMAKE_INSTALL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/model.pb
-)
-
 install(PROGRAMS
+  scripts/download_model.py
+  config/model_config.yaml
   scripts/run_turtlebot_controller.sh
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+  DESTINATION lib/${PROJECT_NAME}
 )
 
-install(DIRECTORY launch
- DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+install(DIRECTORY launch config
+  DESTINATION share/${PROJECT_NAME}
 )
+
+################################################################################
+# Declare ament specific configuration to be passed to dependent projects
+################################################################################
+ament_package()
 
 ################################################################################
 # Test
