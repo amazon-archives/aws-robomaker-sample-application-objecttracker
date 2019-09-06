@@ -10,7 +10,6 @@
   <author email="ros-contributions@amazon.com">AWS RoboMaker</author>
   <maintainer email="ros-contributions@amazon.com">AWS RoboMaker</maintainer>
 
-  <depend>python-boto3-pip</depend>
   <depend>python-yaml</depend>
 
   <exec_depend>geometry_msgs</exec_depend>
