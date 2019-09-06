@@ -42,7 +42,7 @@ def main(argv):
 
     download_model_from_s3(context, dest_path)
 
-    print 'Successfully downloaded model to ', dest_path
+    print('Successfully downloaded model to ', dest_path)
 
 if __name__ == '__main__':
     main(sys.argv)

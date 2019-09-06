@@ -3,7 +3,10 @@ import sys
 from PIL import Image
 import numpy as np
 import tensorflow as tf
-import rospy
+
+import rclpy
+from rclpy.node import Node
+
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Image as sensor_image
 
@@ -13,8 +16,9 @@ AWS_REGION = "us-west-2"
 
 TRAINING_IMAGE_SIZE = (160, 120)
 
-class InferenceWorker:
+class InferenceWorker(Node):
     def __init__(self, model_path):
+        super().__init__('rl_coach')
         self.model_path = model_path
 
     def run(self):
@@ -22,10 +26,12 @@ class InferenceWorker:
         self.session = tf.Session(graph=self.graph, config=tf.ConfigProto(allow_soft_placement=True, log_device_placement=True))
 
         print('INFO: Creating publisher on /cmd_vel')
-        self.ack_publisher = rospy.Publisher('/cmd_vel', Twist, queue_size=100)
+        self.ack_publisher = self.create_publisher(Twist, '/cmd_vel', 100)
 
         print('INFO: Creating subscriber on /camera/bgr/image_raw')
-        rospy.Subscriber('/camera/bgr/image_raw', sensor_image, self.callback_image)
+        #TODO: Need to change for raspicam
+        #self.subscription = self.create_subscription(sensor_image, '/camera/bgr/image_raw', self.callback_image, 10)
+        self.subscription = self.create_subscription(sensor_image, '/image', self.callback_image, 10)
 
         print('INFO: Finished initialization')
 
@@ -44,8 +50,9 @@ class InferenceWorker:
 
     def callback_image(self, raw_image):
         # Read the image
+        image_data = np.array(raw_image.data)
         image = Image.frombytes('RGB', (raw_image.width, raw_image.height),
-                                raw_image.data, 'raw', 'BGR', 0, 1)
+                                image_data, 'raw', 'BGR', 0, 1)
         image = image.resize(TRAINING_IMAGE_SIZE)
         image = np.array(image)
 
@@ -72,7 +79,7 @@ class InferenceWorker:
             steering = -0.6
             throttle = 0.1
         elif action == 2:  # straight
-            steering = 0
+            steering = 0.0
             throttle = 0.1
         elif action == 3:  # move left
             steering = 0.3
@@ -92,8 +99,8 @@ if __name__ == '__main__':
     model_path = sys.argv[1]
     print('Starting Inference Worker, Specified Model Directory: ', model_path)
 
-    rospy.init_node('rl_coach', anonymous=True)
+    rclpy.init()
     inference_worker = InferenceWorker(model_path)
     inference_worker.run()
-    rospy.spin()
-
+    rclpy.spin(inference_worker)
+    rclpy.shutdown()
