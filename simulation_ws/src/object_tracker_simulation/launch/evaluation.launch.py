@@ -38,6 +38,12 @@ def generate_launch_description():
         default_value='false',
         description='Argument for GUI Display')
 
+    gazebo_ros = get_package_share_directory('gazebo_ros')
+    gazebo_client = launch.actions.IncludeLaunchDescription(
+        launch.launch_description_sources.PythonLaunchDescriptionSource(
+            os.path.join(gazebo_ros, 'launch', 'gzclient.launch.py')),
+        condition=launch.conditions.IfCondition(launch.substitutions.LaunchConfiguration('gui')))
+
     ###########################
     ##  Create World Launch  ##
     ###########################
@@ -56,7 +62,7 @@ def generate_launch_description():
     ########################
     ##  Launch Evalution  ##
     ########################
-    ld = launch.LaunchDescription([gui, object_tracker_simulation_launch, rl_agent])
+    ld = launch.LaunchDescription([gui, object_tracker_simulation_launch, rl_agent, gazebo_client])
     return ld
 
 
