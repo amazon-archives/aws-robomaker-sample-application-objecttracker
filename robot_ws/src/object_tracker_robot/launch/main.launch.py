@@ -19,6 +19,8 @@ import launch
 import launch_ros.actions
 
 from launch import LaunchDescription
+from launch.substitutions import LaunchConfiguration
+from launch.actions import DeclareLaunchArgument
 from ament_index_python.packages import get_package_share_directory
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))  # noqa
@@ -34,10 +36,10 @@ def generate_launch_description():
     ####################################
     ##  Get Raspicam Params from YAML ##
     ####################################
-#    raspicam_params = os.path.join(
-#        get_package_share_directory('object_tracker_robot'),
-#        'config', 'raspicam_config.yaml'
-#    )
+    #raspicam_params = os.path.join(
+    #    get_package_share_directory('object_tracker_robot'),
+    #    'config', 'raspicam_config.yaml'
+    #)
 
     ########################
     ##  TurtleBot3 Launch ##
@@ -50,19 +52,29 @@ def generate_launch_description():
     ###########################################
     ##  Start getting images from the camera ##
     ###########################################
-    """ TODO: Need to modify for raspicam, as currently running on usbcam
+    """ TODO: Need to modify for raspicam, as currently running on usbcam """
+    
     raspicam_node = launch_ros.actions.Node(
         package='ros2_raspicam_node', node_executable='service', output='screen',
         node_name='ros2_raspicam_node',
-        name='ros2_raspicam_node',
-        #parameters=[raspicam_params]
+        condition=launch.conditions.IfCondition(LaunchConfiguration("run_pi_cam")),
+        name='ros2_raspicam_node'
     )
-    """
+    run_pi_cam = DeclareLaunchArgument(
+        name="run_pi_cam",
+        default_value="False",
+        description="Launch PI CAM")
+
+    run_usb_cam = DeclareLaunchArgument(
+        name="run_usb_cam",
+        default_value="True",
+        description="Launch USB CAM")
 
     usbcam_node = launch_ros.actions.Node(
         package='image_tools', node_executable='cam2image', output='screen',
         node_name='cam2image',
-        name='cam2image',
+        condition=launch.conditions.IfCondition(LaunchConfiguration("run_usb_cam")), 
+        name='cam2image'
     )
     ##########################
     ##  Start the RL worker ##
@@ -71,10 +83,9 @@ def generate_launch_description():
         package='object_tracker_robot', node_executable='run_turtlebot_controller.sh', output='screen',
         node_name='agent', name='agent')
 
-    ld = LaunchDescription([object_tracker_robot_launch, turtlebot_controller_node, usbcam_node])
+    ld = LaunchDescription([object_tracker_robot_launch,turtlebot_controller_node,run_usb_cam,usbcam_node,run_pi_cam,raspicam_node])
 
     return ld
-
 
 if __name__ == '__main__':
     generate_launch_description()
