@@ -103,4 +103,5 @@ if __name__ == '__main__':
     inference_worker = InferenceWorker(model_path)
     inference_worker.run()
     rclpy.spin(inference_worker)
+    inference_worker.destroy_node()
     rclpy.shutdown()
