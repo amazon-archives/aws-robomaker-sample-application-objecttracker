@@ -108,6 +108,8 @@ roslaunch object_tracker_simulation evaluation.launch
 You must build the bundle for the same architecture that you plan on running the application on. The easiest way to do this is either by building on
 the TurtleBot itself or using a cross-build solution, like the one provided with AWS RoboMaker.
 
+*NOTE*
+The AWS RoboMaker cross-compilation container uses colcon bundle to package the compiled sources, which resolves the Debian packages for Ubuntu (Bionic and Xenial) provided in the ROS distros. Packages not available in the ROS distros such as Debian packages for Raspbian are not supported by the cross-compilation container. 
 
 Before you build the robot workspace, you must edit the file `robot_ws/src/object_tracker_robot/config/model_config.yaml` to include the location
 of your trained model.
@@ -215,6 +217,9 @@ roslaunch object_tracker_robot evaluation.launch
 ```
 
 ### Building the robot bundle
+
+*NOTE*
+The AWS RoboMaker cross-compilation container uses colcon bundle to package the compiled sources, which resolves the Debian packages for Ubuntu (Bionic and Xenial) provided in the ROS distros. Packages not available in the ROS distros such as Debian packages for Raspbian are not supported by the cross-compilation container. 
 
 Once the model is trained, you can build a bundle to deploy to the robot. If you are using the RoboMaker Development Environment, you can use the
 following commands to create a Docker container that performs cross-builds:
