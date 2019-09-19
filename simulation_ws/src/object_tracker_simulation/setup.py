@@ -10,6 +10,7 @@ setup(
     version='1.2.0',
     packages=find_packages(),
     data_files=[
+        ('share/ament_index/resource_index/packages', ['resource/' + package_name]),
         ('share/' + package_name + '/launch', ['launch/create_world.launch.py']),
         ('share/' + package_name + '/launch', ['launch/evaluation.launch.py']),
         ('share/' + package_name + '/launch', ['launch/local_training.launch.py']),
