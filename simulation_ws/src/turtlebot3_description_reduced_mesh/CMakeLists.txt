@@ -18,7 +18,9 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(gazebo_ros_pkgs REQUIRED)
+find_package(turtlebot3_msgs REQUIRED)
 find_package(turtlebot3 REQUIRED)
+find_package(gazebo_ros REQUIRED)
 
 ################################################################################
 # Setup for python modules and scripts
@@ -43,7 +45,7 @@ find_package(turtlebot3 REQUIRED)
 ################################################################################
 # Install
 ################################################################################
-install(DIRECTORY models rviz worlds launch meshes urdf
+install(DIRECTORY launch meshes urdf
   DESTINATION share/${PROJECT_NAME}/
 )
 
@@ -59,7 +61,5 @@ endif()
 ################################################################################
 # Macro for ament package
 ################################################################################
-ament_export_dependencies(rclcpp)
-ament_export_dependencies(gazebo_ros_pkgs)
-ament_export_dependencies(turtlebot3)
+
 ament_package()

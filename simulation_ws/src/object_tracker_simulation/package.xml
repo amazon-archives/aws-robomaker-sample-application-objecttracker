@@ -17,12 +17,18 @@
   <depend>nav_msgs</depend>
   <depend>sensor_msgs</depend>
   <depend>std_msgs</depend>
+  <depend>turtlebot3_msgs</depend>
+  <depend>turtlebot3</depend>
+  <depend>xacro</depend>
+  <depend>launch</depend>
 
   <exec_depend>gazebo</exec_depend>
   <test_depend>python3-pytest</test_depend>
+  <exec_depend>turtlebot3_description_reduced_mesh</exec_depend>
 
   <export>
     <build_type>ament_python</build_type>
+    <gazebo_ros gazebo_media_path="${prefix}/worlds"/>
   </export>
 
 </package>

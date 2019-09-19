@@ -47,10 +47,10 @@ def generate_launch_description():
     ###########################
     ##  Create World Launch  ##
     ###########################
-    object_tracker_simulation_dir = get_package_share_directory('turtlebot3_description_reduced_mesh')
+    object_tracker_simulation_dir = get_package_share_directory('object_tracker_simulation')
     object_tracker_simulation_launch = launch.actions.IncludeLaunchDescription(
         launch.launch_description_sources.PythonLaunchDescriptionSource(
-            os.path.join(object_tracker_simulation_dir, 'launch', 'turtlebot3_waffle_pi_and_burger.launch.py')))
+            os.path.join(object_tracker_simulation_dir, 'launch', 'create_world.launch.py')))
 
     ###################################
     ##  Reinforcement Learning Node  ##
