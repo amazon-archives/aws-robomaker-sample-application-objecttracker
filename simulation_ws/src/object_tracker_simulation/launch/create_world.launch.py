@@ -56,7 +56,8 @@ def generate_launch_description():
             description='SDF world file'),
         DeclareLaunchArgument(
             name='gui',
-            default_value='false'
+            default_value='false',
+            description='Argument for GUI Display'
         ),
         DeclareLaunchArgument(
             name='use_sim_time',

@@ -21,14 +21,11 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))  # noqa
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'launch'))  # noqa
 
 import launch
-import tempfile
-from launch_ros import get_default_launch_description
 import launch_ros.actions
 
 from ament_index_python.packages import get_package_share_directory
-import xacro
-import lifecycle_msgs.msg
 import subprocess
+
 
 def generate_launch_description():
     """Main."""
@@ -70,12 +67,12 @@ def generate_launch_description():
         output='screen'
     )
 
-
     ld = launch.LaunchDescription(
         [use_sim_time_false,
          spawn_robot_waffle_pi, 
          spawn_robot_burger
          ])
+
     return ld 
 
 
