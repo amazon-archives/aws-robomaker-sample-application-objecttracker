@@ -10,15 +10,13 @@
   <author email="ros-contributions@amazon.com">AWS RoboMaker</author>
   <maintainer email="ros-contributions@amazon.com">AWS RoboMaker</maintainer>
 
-  <depend>python-boto3-pip</depend>
-  <depend>python-yaml</depend>
-
+  <depend>python3-boto3</depend>
+  <depend>python3-yaml</depend>
+  <depend>image_tools</depend>
   <exec_depend>geometry_msgs</exec_depend>
-  <exec_depend>libjpeg62</exec_depend>
   <exec_depend>rclpy</exec_depend>
   <exec_depend>sensor_msgs</exec_depend>
   <exec_depend>turtlebot3_bringup</exec_depend>
-
   <test_depend>python3-pytest</test_depend>
 
   <export>
