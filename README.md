@@ -8,13 +8,15 @@ Keywords: Reinforcement learning, AWS, RoboMaker
 
 ![object-tracker-world.jpg](docs/images/object-tracker-world.jpg)
 
+
 ## Requirements
 
-- ROS Kinetic / Melodic (optional) - To run the simulation locally. Other distributions of ROS may work, however they have not been tested
-- Gazebo (optional) - To run the simulation locally
+- ROS Dashing - To run the simulation locally (other distributions of ROS may work, but they have not been tested)
+- Gazebo 9 (optional) - To run the simulation locally
 - TurtleBot WafflePi (optional) - To run the trained reinforcement learning model in the real world
 - An AWS S3 bucket - To store the trained reinforcement learning model
 - AWS RoboMaker - To run the simulation and to deploy the trained model to the robot
+
 
 ## AWS Account Setup
   
@@ -22,7 +24,6 @@ Keywords: Reinforcement learning, AWS, RoboMaker
 You will need to create an AWS Account and configure the credentials to be able to communicate with AWS services. You may find [AWS Configuration and Credential Files](https://docs.aws.amazon.com/cli/latest/userguide/cli-config-files.html) helpful.
 
 ### AWS Permissions
-
 To train the reinforcement learning model in simulation, you need an IAM role with the following policy. You can find instructions for creating a new IAM Policy
 [here](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_create.html#access_policies_create-start). In the JSON tab paste the following policy document:
 
@@ -48,6 +49,7 @@ To train the reinforcement learning model in simulation, you need an IAM role wi
     ]
 }
 ```
+
 
 ## Usage (without RoboMaker)
 
@@ -80,8 +82,9 @@ The following environment variables must be set when you run your simulation:
 Once the environment variables are set, you can run local training using the roslaunch command
 
 ```bash
+source /usr/share/gazebo/setup.sh
 source simulation_ws/install/setup.sh
-roslaunch object_tracker_simulation local_training.launch
+ros2 launch object_tracker_simulation local_training.launch.py
 ```
 
 ### Evaluating the model
@@ -96,8 +99,9 @@ The evaluation phase requires that the same environment variables be set as in t
 evaluation using the roslaunch command
 
 ```bash
+source /usr/share/gazebo/setup.sh
 source simulation_ws/install/setup.sh
-roslaunch object_tracker_simulation evaluation.launch
+ros2 launch object_tracker_simulation evaluation.launch.py
 ```
 
 ### Deploying the model
@@ -108,29 +112,11 @@ roslaunch object_tracker_simulation evaluation.launch
 You must build the bundle for the same architecture that you plan on running the application on. The easiest way to do this is either by building on
 the TurtleBot itself or using a cross-build solution, like the one provided with AWS RoboMaker.
 
-
 Before you build the robot workspace, you must edit the file `robot_ws/src/object_tracker_robot/config/model_config.yaml` to include the location
 of your trained model.
 
-Next, you need to add custom rosdep rules required by the application. The first rule is hosted by RoboMaker, and can be added by running `echo "yaml https://s3-us-west-2.amazonaws.com/rosdep/python.yaml" > /etc/ros/rosdep/sources.list.d/18-python-boto3-pip.list`
-
-The next rule you can create yourself. Create a file `/etc/ros/rosdep/custom-rules/object-tracker-rules.yaml` and add the following configuration to it.
-```bash
-libjpeg62:
-  ubuntu:
-    xenial: [libjpeg62]
-```
-
-Then add the rule to rosdep by running `echo "yaml file:/etc/ros/rosdep/custom-rules/object-tracker-rules.yaml" > /etc/ros/rosdep/sources.list.d/23-object-tracker-rules.list`
-
-Update rosdep once your new rules are added:
-```bash
-sudo apt-get update
-rosdep update
-```
-
-Finally, build your application. If your model is not in a private bucket, the build step requires AWS credentials for the bucket you wish
-to use. One way to do this is by setting the AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables. For more information on how to get
+Build your application. If your model is not in a private bucket, the build step requires AWS credentials for the bucket you wish to use.
+One way to do this is by setting the AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables. For more information on how to get
 your AWS credentials, see [this page](https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html).
 ```bash
 cd robot_ws
@@ -153,7 +139,7 @@ Once the bundle has been uploaded to the target TurtleBot WafflePi, ssh into the
 ```bash
 export BUNDLE_CURRENT_PREFIX=<bundle location>
 source $BUNDLE_CURRENT_PREFIX/setup.sh
-roslaunch object_tracker_robot main.launch
+ros2 launch object_tracker_robot main.launch.py
 ```
 
 Your TurtleBot WafflePi should now be track and move towards any other TurtleBot you put in front of it! For the best results, your real-life environment should match
@@ -203,7 +189,7 @@ Finally, the launch command for the simulation application is as follows:
 
 ```bash
 source simulation_ws/install/setup.sh
-roslaunch object_tracker_simulation local_training.launch
+ros2 launch object_tracker_simulation local_training.launch.py
 ```
 
 ### Evaluating the model
@@ -211,7 +197,7 @@ roslaunch object_tracker_simulation local_training.launch
 To evaluate your model in RoboMaker, clone the job you used to train and change the launch command of the simulation application to the following:
 
 ```bash
-roslaunch object_tracker_robot evaluation.launch
+ros2 launch object_tracker_simulation evaluation.launch.py
 ```
 
 ### Building the robot bundle
@@ -229,21 +215,7 @@ cd robot_ws
 Before you build the robot workspace, you must edit the file `robot_ws/src/object_tracker_robot/config/model_config.yaml` to include the location
 of your trained model.
 
-Create a file `/etc/ros/rosdep/custom-rules/object-tracker-rules.yaml` and add the following configuration to it.
-```bash
-libjpeg62:
-  ubuntu:
-    xenial: [libjpeg62]
-```
-
-Then add the rule to rosdep using the following commands:
-```bash
-echo "yaml file:/etc/ros/rosdep/custom-rules/object-tracker-rules.yaml" > /etc/ros/rosdep/sources.list.d/23-object-tracker-rules.list
-apt-get update
-rosdep update
-```
-
-Finally, build and bundle your application.
+Build and bundle your application.
 ```bash
 cd /robot_ws
 rosdep install --from-paths src --ignore-src -r -y
@@ -281,10 +253,12 @@ its target, while the second is when the algorithm uses the information gained i
 phase, no new commands are sent to the TurtleBot, meaning it will appear as if it is stopped, spinning in circles, or drifting off
 aimlessly.
 
+
 ## License
 
 Most of this code is licensed under the MIT-0 no-attribution license. However, the sagemaker_rl_agent package is
 licensed under Apache 2. See LICENSE.txt for further information.
+
 
 ## How to Contribute
 
