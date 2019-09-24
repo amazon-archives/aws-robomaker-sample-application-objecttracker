@@ -1,5 +1,23 @@
+#!/usr/bin/env python3
+"""
+ Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ Permission is hereby granted, free of charge, to any person obtaining a copy of this
+ software and associated documentation files (the "Software"), to deal in the Software
+ without restriction, including without limitation the rights to use, copy, modify,
+ merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
+ permit persons to whom the Software is furnished to do so.
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"""
+
 import sys
 
+import boto3
+import yaml
 from PIL import Image
 import numpy as np
 import tensorflow as tf
@@ -15,6 +33,32 @@ FROZEN_MODEL_S3_KEY = "model/model.pb"
 AWS_REGION = "us-west-2"
 
 TRAINING_IMAGE_SIZE = (160, 120)
+
+
+
+def load_config(config_path):
+   stream = open(config_path, 'r')
+   context = yaml.safe_load(stream)
+
+   required_items = (
+       'bucket_name',
+       'model_key',
+       'region_name'
+   )
+
+   if not all(item in context for item in required_items):
+       raise ValueError('Config file is missing required items')
+
+   return context
+
+def download_model_from_s3(context, dest_path):
+   s3 = boto3.resource('s3', region_name=context['region_name'])
+   s3.meta.client.download_file(
+       Bucket=context['bucket_name'],
+       Key=context['model_key'],
+       Filename=dest_path)
+
+
 
 class InferenceWorker(Node):
     def __init__(self, model_path):
@@ -95,8 +139,15 @@ class InferenceWorker(Node):
         speed.angular.z = steering
         self.ack_publisher.publish(speed)
 
+    
+
 if __name__ == '__main__':
-    model_path = sys.argv[1]
+    source_config = sys.argv[1]
+    model_path = sys.argv[2]
+
+    context = load_config(source_config)
+    download_model_from_s3(context, model_path)
+    print('Successfully downloaded model to ', model_path)
     print('Starting Inference Worker, Specified Model Directory: ', model_path)
 
     rclpy.init()
