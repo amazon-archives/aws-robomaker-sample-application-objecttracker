@@ -52,8 +52,6 @@ def generate_launch_description():
     ###########################################
     ##  Start getting images from the camera ##
     ###########################################
-    """ TODO: Need to modify for raspicam, as currently running on usbcam """
-    
     raspicam_node = launch_ros.actions.Node(
         package='ros2_raspicam_node', node_executable='service', output='screen',
         node_name='ros2_raspicam_node',
@@ -79,11 +77,22 @@ def generate_launch_description():
     ##########################
     ##  Start the RL worker ##
     ##########################
-    turtlebot_controller_node = launch_ros.actions.Node(
-        package='object_tracker_robot', node_executable='run_turtlebot_controller.sh', output='screen',
-        node_name='agent', name='agent')
+    config_common = os.path.join(get_package_share_directory('object_tracker_robot'),
+                        'config', 'model_config.yaml')
+    MODEL_PATH = os.path.join(get_package_share_directory('object_tracker_robot'),
+                        '', 'model.pb')
+   
+    turtlebot_inference_node = launch_ros.actions.Node(
+        package='turtlebot_controller', node_executable='inference_worker.py', output='screen',
+        arguments=[ config_common, # Common parameters
+                    MODEL_PATH  # Camera related parameters
+                  ],
+        node_name='rl_coach',
+        name='rl_coach'
 
-    ld = LaunchDescription([object_tracker_robot_launch,turtlebot_controller_node,run_usb_cam,usbcam_node,run_pi_cam,raspicam_node])
+        )
+
+    ld = LaunchDescription([object_tracker_robot_launch,turtlebot_inference_node,run_usb_cam,usbcam_node,run_pi_cam,raspicam_node])
 
     return ld
 

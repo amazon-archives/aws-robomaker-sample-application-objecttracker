@@ -28,12 +28,6 @@ include_directories(
 ################################################################################
 # Install
 ################################################################################
-install(PROGRAMS
-  scripts/download_model.py
-  config/model_config.yaml
-  scripts/run_turtlebot_controller.sh
-  DESTINATION lib/${PROJECT_NAME}
-)
 
 install(DIRECTORY launch config
   DESTINATION share/${PROJECT_NAME}
