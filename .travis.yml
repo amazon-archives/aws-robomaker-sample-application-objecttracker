@@ -1,7 +1,7 @@
 sudo: required
 language: generic
 compiler:
-  - gcc
+- gcc
 notifications:
   email:
     on_success: change
@@ -20,43 +20,45 @@ env:
   - WORKSPACES="simulation_ws"
   - secure: OiTj2AtslvooxtxyvDyeYhWa373RYuIegCL6olGbVDJceb6Z93sI7RwiSGNxJQF8JkW/L+076XLSxO2jVVjL5JKMta10h5exjmx68NSGwGUB7QpbQPAQUD8/3Cf5NnVTxltmGWi4rcXwgFSxQQUaB3M6Y8/ghqXxbQUqmuguJ6scoNyzpmVORgbZ3mOuZVe40gGcM13SyPht746amLPV2HapxoUf9at73PTlolaxzIkws/moAuEdMeLxhtkE/NgbIZKt/9AJFaogJGGftjDQL/ZSGKrlI296qJS1fnaZXzDTyNk5+/UDOZvTyjEXkoC9BK1nMIdMgo9BXlj1sVicyhovIyAQ7AX80rqXAHsK4N/KPc2HL6zorlpmBrmh9acece9OHPKOGrF4QkThefiexVLvT8TJr7ZdLFiXopOaB/Nzrl1NNJZvhJ2GVcOzEXnLEhUjVR5ZR55ZwVb50/8LExF+bLq6W99ELAueF04PINqQZtb5goVmnOKS1Spur5wiu9F42gLRv+dJCNnDgdEc3U0mvuHJ3tIPycHKANbDsY/pquCjuzkT0a0QYnzQuY0b6yqxwPlqWP0alBUtgo9A4gnb/sWY4TWTxFNLXUKEvGlhWhe8ijg+8FNTIhRmY3qosmiYLPLLswAKbUj0T1Ski1CXCjGTcv3C+jCRZG2hJ18=
   - secure: NW37G5hIZQ5M3yj7PkrFoMfW1z+1a9mSQSqwuGwtftmtxwmjnruv4p8UMZpML/FPx/b7dvSaRqJvX03+pzzRJlOf69SG5W7+v6dEvukQbl84Nhy7qLPeXvhXMyruXwToRChyBng+OhndF4osJtD2+JLSJuLcDxBpwyAlCg853zuyrbdTMrGEvcjXr0bLou6tRUr5ZOvu+bYZqV/1YqE0nCC/+dW+wO+t21w35Y8+6ZYRLqc6p4+dJUrdukEnstv6abNAsiHptFsiIVmbLxq5v34Ytu0SFY7SOSMYFGv4EuUHyNmCyYHHk+Uueu2k7l80fWfMBLSBrT5/sRKUIUNSvtujDUqlDZ6wmsTHtqY7rrT/oPVHS0T8Ae1LABAMjR8cXxCyRFxn/euEL/0K7Je25QmzWg4MyzT/TfVW7jeA/7PqH9TmLf1+LJDgxPWM/Oe5zJlglfVmz0SX65xal6E6i8WGyY6Lfk7LZcgMB/g+8zJCL1v1t0HM+uiWIXRD98KbXJz/QzIud8DfgnWTg2xKo9FGAKv0CsyX8aYlxIR/3bK6YM8NcCg4HoAbFzy1BDXwbAybhfLBsoYO3cFRN2Ao6ns5RtQsgo2mK0202H3vfiSOKUCRkBmmabxiJHZq2Ab/J/oZ2If55Klv/qs8GCoa1BKUSpSmgt/ojKE98QY3TQQ=
+  - secure: Dqa38Ky0AFpDwsCxqBAiUJ4YZ/khiR/M8Lx9fjJrLOEIvkVBAc1f78PA80pX+04yBVedrRhmx5YMwVItx7eWiWT/ROwtI6cdO3KkITDf2QY2c96vQZdCid3VknFiMBinC/5e9D+g4hoqp4eJpl4bEf6q8zP5W/6IgnakB6GFknKplFhFhJidq0YVxKfQ5NT9W1q96qQiby6QdCb7dB8TZqNd2xwPHfkLeZV0azu4tIk0qqB8LIJlprORgcXkQA1n0A4IG/XAEha7i/gpf+9vIlAr1avz+06+Kb6TOafksL/zw4YLDZEn8zaQNI/fKyhP4TCPDDVcAEdvnL6mX1HyOQFB2E3iyI+2Zsqi3ZeNrxIE+ecFDwAOeAQFQqNzT3qHUQ0jsK7rjP+Z00QgWuWEmXbDVUn8skiXLwGB+lBUtBachOJrG5rBgfyKepczI7AtaHAnTioVwizFWdJ1Bpza+B11peYpi3sW2plKggHIJ2Hk9VLFiL0AZ26p7SXgfdt7T9Czs5fG/HE7aKDxC63xTihdt3YE9xinrsyhi0d2Pr83xZUl8xsLZREAcFOTj0L1uo+Dcn+2hquRejCdlraXdnCSXdITNAB3dOCrxduGNW/ZzFahRVs6QInb2ks/79NpU95kNnUNfaw0/X9UQUmTw/GrIdyFXBG3ofR70uwCsiM=
+  - secure: VamyqI8KfeRimUoO+DuhlBSMM4/akevMX5Cx8X874x4xqP3Isuhdauw7G4WKMVCHe+nPkHOV+qmf7KQzB4Tm/wkgPMiuAyMCLBN+omR4lMni59qhxtEQhA9l4o7X4Csewezk0nPN8wKH2VQDQQOzmrrW/MBlivo7ZAql4w7UUojYJdGUrbdPhb99SvrMEGyN1S6ntoh4YPr46GEqetlf+TnR/UIeuFBLedi/S0z4BEXmwyHpnvSds0n79RUKSJ279yh/Kg6MGabNN1tndFwxOIS/Ll+M7LEoE5z7farvmtQKQ7pIV5lReW39pySdTU9sUivARONoJpc16odBDnj09Bkjk3C26VbY5oowaZQwzD1GT/p9Z+NoiZ+2CcJNXQdjFB0NScnRwNWCgD1BhR64RACUg9D/1yu88VCzSuu0QDSQS0Duy2Xguuv49LRRukC4h4Mfjh8vWloZ4tmYuRbuBgIv4b2rQPkAE/C6zfOzhxz28ueKmVDz+D05vfI4upuEtr/oFro6Ms3+VWncwMhdCpHll2/zbgJ0afnFHT6Xe6L+p2PkW+5KG8bLk11tudfJ93odgqkZA9RFC3Z2RZ7pcQUzj9oPT1Oed+Dt1F1YUkkCmz3n8GwXTH6pNTJQ3NY2nT1te/zrM5wWirtWBQlE0+EaSmcm2BwZpJYDJ5TFm2E=
 before_install:
-  - pip install --user awscli
+- pip install --user awscli
 install:
-  - git clone https://github.com/aws-robotics/travis-scripts.git .ros_ci
+- git clone https://github.com/aws-robotics/travis-scripts.git .ros_ci
 script:
-  - ". .ros_ci/add_tag.sh"
-  - while sleep 9m; do echo "=====[ $SECONDS seconds still running ]====="; done &
-  - .ros_ci/ce_build.sh
-  - kill %1
+- ". .ros_ci/add_tag.sh"
+- while sleep 9m; do echo "=====[ $SECONDS seconds still running ]====="; done &
+- ".ros_ci/ce_build.sh"
+- kill %1
 before_deploy:
-  - . .ros_ci/before_deploy.sh
+- ". .ros_ci/before_deploy.sh"
 deploy:
-  - provider: s3
-    access_key_id: "$AWS_ACCESS_KEY_ID"
-    secret_access_key: "$AWS_SECRET_ACCESS_KEY"
-    bucket: "$S3_BUCKET_NAME"
-    region: us-west-2
-    local_dir: shared
-    skip_cleanup: true
-    wait-until-deployed: true
-    on:
-      branch: ros2
-    upload-dir: travis/${SA_NAME}/${ROS_DISTRO}/gazebo${GAZEBO_VERSION}
+- provider: s3
+  access_key_id: "$AWS_ACCESS_KEY_ID"
+  secret_access_key: "$AWS_SECRET_ACCESS_KEY"
+  bucket: "$S3_BUCKET_NAME"
+  region: us-west-2
+  local_dir: shared
+  skip_cleanup: true
+  wait-until-deployed: true
+  on:
+    branch: ros2
+  upload-dir: travis/${SA_NAME}/${ROS_DISTRO}/gazebo${GAZEBO_VERSION}
 jobs:
   include:
-    - stage: Build & Bundle
-      env: ROS_DISTRO=dashing ROS_VERSION=2 GAZEBO_VERSION=9 WORKSPACES="robot_ws"
-    - stage: Build & Bundle
-      env: ROS_DISTRO=dashing ROS_VERSION=2 GAZEBO_VERSION=9 WORKSPACES="simulation_ws"
-    - stage: Deploy
-      script: ". .ros_ci/add_tag.sh"
-      env: ROS_DISTRO=dashing ROS_VERSION=2 GAZEBO_VERSION=9
-      before_deploy: "export APP_MANIFEST_REPO=AppManifest-${SA_NAME}-${ROS_DISTRO}-gazebo${GAZEBO_VERSION}"
-      deploy:
-        - provider: script
-          script: bash .ros_ci/codepipeline_deploy.sh
-          on:
-            branch: ros2
+  - stage: Build & Bundle
+    env: ROS_DISTRO=dashing ROS_VERSION=2 GAZEBO_VERSION=9 WORKSPACES="robot_ws"
+  - stage: Build & Bundle
+    env: ROS_DISTRO=dashing ROS_VERSION=2 GAZEBO_VERSION=9 WORKSPACES="simulation_ws"
+  - stage: Deploy
+    script: ". .ros_ci/add_tag.sh"
+    env: ROS_DISTRO=dashing ROS_VERSION=2 GAZEBO_VERSION=9
+    before_deploy: export APP_MANIFEST_REPO=AppManifest-${SA_NAME}-${ROS_DISTRO}-gazebo${GAZEBO_VERSION}
+    deploy:
+    - provider: script
+      script: bash .ros_ci/codepipeline_deploy.sh
+      on:
+        branch: ros2
 after_deploy:
-  - ".ros_ci/post_deploy.sh"
+- ".ros_ci/post_deploy.sh"
