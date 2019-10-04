@@ -13,6 +13,9 @@ env:
   global:
   - SA_NAME=object-tracker
   - SA_PACKAGE_NAME=object_tracker_simulation
+  - ROS_DISTRO=dashing
+  - ROS_VERSION=2
+  - GAZEBO_VERSION=9
   - NO_TEST=true
   - GH_USER_NAME="travis-ci"
   - GH_USER_EMAIL="travis@travis-ci.org"
@@ -48,12 +51,14 @@ deploy:
 jobs:
   include:
   - stage: Build & Bundle
-    env: ROS_DISTRO=dashing ROS_VERSION=2 GAZEBO_VERSION=9 WORKSPACES="robot_ws"
+    env: WORKSPACES="robot_ws" UPLOAD_SOURCES="false"
   - stage: Build & Bundle
-    env: ROS_DISTRO=dashing ROS_VERSION=2 GAZEBO_VERSION=9 WORKSPACES="simulation_ws"
+    env: WORKSPACES="simulation_ws" UPLOAD_SOURCES="false"
+  - stage: Upload sources
+    script: . .ros_ci/add_tag.sh && .ros_ci/prepare_sources_to_upload.sh && set +e
+    env: WORKSPACES="robot_ws simulation_ws"
   - stage: Deploy
-    script: ". .ros_ci/add_tag.sh"
-    env: ROS_DISTRO=dashing ROS_VERSION=2 GAZEBO_VERSION=9
+    script: . .ros_ci/add_tag.sh && set +e
     before_deploy: export APP_MANIFEST_REPO=AppManifest-${SA_NAME}-${ROS_DISTRO}-gazebo${GAZEBO_VERSION}
     deploy:
     - provider: script
