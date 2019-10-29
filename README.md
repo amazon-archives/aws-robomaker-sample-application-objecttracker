@@ -131,15 +131,19 @@ If you are not running on the same computer you are using to build, you must als
 If you did not build on the robot, you must now copy the bundle to the robot you wish to run on, either by using RoboMaker's deployment features or by
 copying using `scp` or `rsync`.
 
-You must also complete the Raspberry Pi camera setup for the TurtleBot WafflePi, outlined
-[here](http://emanual.robotis.com/docs/en/platform/turtlebot3/appendix_raspi_cam/#raspberry-pi-camera).
+Support for the Raspberry Pi camera in ROS Dashing on Ubuntu is currently limited. We recommend using a USB webcam instead.
+
+Give the ROS nodes permission to the use the camera by running the following command before attempting to start the robot application on the robot:
+```bash
+sudo chmod 666 /dev/video0
+```
 
 Once the bundle has been uploaded to the target TurtleBot WafflePi, ssh into the TurtleBot and run
 
 ```bash
 export BUNDLE_CURRENT_PREFIX=<bundle location>
 source $BUNDLE_CURRENT_PREFIX/setup.sh
-ros2 launch object_tracker_robot main.launch.py
+ros2 launch object_tracker_robot main.launch.py run_usb_cam:=True
 ```
 
 Your TurtleBot WafflePi should now be track and move towards any other TurtleBot you put in front of it! For the best results, your real-life environment should match
