@@ -2,7 +2,10 @@
 
 This Sample Application can train a reinforcement learning model to make a TurtleBot WafflePi to follow a TurtleBot burger. It can then deploy and run the learned model to a real-life TurtleBot WafflePi via AWS RoboMaker.
 
-_RoboMaker sample applications include third-party software licensed under open-source licenses and is provided for demonstration purposes only. Incorporation or use of RoboMaker sample applications in connection with your production workloads or a commercial products or devices may affect your legal rights or obligations under the applicable open-source licenses. Source code information can be found [here](https://s3.console.aws.amazon.com/s3/buckets/robomaker-applications-us-east-1-72fc243f9355/object-tracker/?region=us-east-1)._
+_RoboMaker sample applications include third-party software licensed under open-source licenses and is provided for demonstration purposes only.
+Amazon does not provide or support third-party software libraries included in the sample application.
+Incorporation or use of RoboMaker sample applications in connection with your production workloads or commercial products or devices may affect your legal rights or obligations under the applicable open-source licenses.
+Source code information can be found [here](https://s3.console.aws.amazon.com/s3/buckets/robomaker-applications-us-east-1-72fc243f9355/object-tracker/?region=us-east-1)._
 
 Keywords: Reinforcement learning, AWS, RoboMaker
 
